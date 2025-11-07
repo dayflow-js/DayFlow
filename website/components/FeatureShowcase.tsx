@@ -361,7 +361,7 @@ export const CustomDetailDialogShowcase: React.FC = () => {
           typeof value === 'number'
         ) {
           result = new Date(value);
-        } else if (typeof (value as any)?.toString === 'function') {
+        } else if (typeof (value as unknown as { toString?: () => string })?.toString === 'function') {
           result = new Date(String(value));
         }
 
@@ -487,7 +487,7 @@ export const CustomDetailDialogShowcase: React.FC = () => {
             }
           : null,
       ].filter(Boolean) as Array<{
-        icon: React.ComponentType<any>;
+        icon: React.ComponentType<{ className?: string; size?: number }>;
         label: string;
       }>;
 

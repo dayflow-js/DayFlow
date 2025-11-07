@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 // Import directly from source files to avoid CSS import in index.ts
 import { useCalendarApp } from '@dayflow/core';
 import { DayFlowCalendar } from '@dayflow/core';
@@ -9,7 +9,6 @@ import { createWeekView } from '@dayflow/core';
 import { createDayView } from '@dayflow/core';
 import { createDragPlugin } from '@dayflow/core';
 import { CalendarType, ViewType } from '@dayflow/core';
-import { Temporal } from 'temporal-polyfill';
 import { generateSampleEvents } from '../utils/sampleData';
 import { CALENDAR_SIDE_PANEL } from '../utils/palette';
 
@@ -27,7 +26,7 @@ const calendarTypes: CalendarType[] = CALENDAR_SIDE_PANEL.map(item => ({
 }));
 
 export function InteractiveCalendar() {
-  const [currentView, setCurrentView] = useState<ViewType>(ViewType.MONTH);
+  const currentView = ViewType.MONTH;
 
   const events = useMemo(() => generateSampleEvents(), []);
 
