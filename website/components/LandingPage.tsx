@@ -14,7 +14,7 @@ const ClientOnlyCalendar = dynamic(
 
 export function LandingPage() {
   return (
-    <div className="mx-auto max-w-7xl">
+    <div className="mx-auto ">
       <section className="space-y-12 py-16">
         <div className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-medium uppercase tracking-wide text-blue-600 dark:bg-blue-500/10 dark:text-blue-300">
@@ -30,7 +30,7 @@ export function LandingPage() {
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
-              href="/docs/getting-started"
+              href="/docs/introduction"
               className="inline-flex items-center justify-center rounded-full bg-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-400"
             >
               Get started

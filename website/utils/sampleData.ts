@@ -87,21 +87,21 @@ const baseAllDayDefinitions: Array<{
   calendarId: string;
   title: string;
 }> = [
-  { offset: -6, span: 2, calendarId: 'team', title: 'Sprint Offsite' },
-  { offset: -2, span: 0, calendarId: 'personal', title: 'Family Day' },
-  { offset: 3, span: 1, calendarId: 'travel', title: 'Client Visit' },
-  { offset: 7, span: 2, calendarId: 'marketing', title: 'Campaign Launch' },
-  { offset: 12, span: 0, calendarId: 'learning', title: 'Conference' },
-  { offset: 16, span: 3, calendarId: 'wellness', title: 'Wellness Retreat' },
-  { offset: 20, span: 1, calendarId: 'support', title: 'Support Rotation' },
-];
+    { offset: -6, span: 2, calendarId: 'team', title: 'Sprint Offsite' },
+    { offset: -2, span: 0, calendarId: 'personal', title: 'Family Day' },
+    { offset: 3, span: 1, calendarId: 'travel', title: 'Client Visit' },
+    { offset: 7, span: 2, calendarId: 'marketing', title: 'Campaign Launch' },
+    { offset: 12, span: 0, calendarId: 'learning', title: 'Conference' },
+    { offset: 16, span: 3, calendarId: 'wellness', title: 'Wellness Retreat' },
+    { offset: 20, span: 1, calendarId: 'support', title: 'Support Rotation' },
+  ];
 
 export const generateSampleEvents = (): Event[] => {
   const today = Temporal.Now.plainDateISO();
   const windowStart = today.subtract({ days: 24 });
   const events: Event[] = [];
 
-  for (let offset = 0; offset < 42; offset += 1) {
+  for (let offset = 0; offset < 56; offset += 1) {
     const date = windowStart.add({ days: offset });
     const dayEvents = randomInt(2, 4);
     for (let i = 0; i < dayEvents; i += 1) {

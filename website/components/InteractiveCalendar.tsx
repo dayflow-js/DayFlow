@@ -31,11 +31,7 @@ export function InteractiveCalendar() {
 
   const events = useMemo(() => generateSampleEvents(), []);
 
-  const dragPlugin = useMemo(
-    () =>
-      createDragPlugin(),
-    []
-  );
+  const dragPlugin = createDragPlugin();
 
   const views = useMemo(
     () => [createDayView(), createWeekView(), createMonthView()],

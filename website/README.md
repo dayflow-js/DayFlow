@@ -1,123 +1,36 @@
-# Day Flow Website
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-This is the documentation website for Day Flow, built with [Next.js](https://nextjs.org/) and [Nextra](https://nextra.site/).
+## Getting Started
 
-## Features
-
-- **Interactive Homepage**: A modern landing page with a fully functional calendar demo
-- **Live Examples**: Users can interact with the calendar directly on the homepage
-- **Schedule-x Inspired Design**: Clean, modern UI with feature cards and code examples
-- **Documentation**: Comprehensive docs powered by Nextra
-
-## Development
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Run the development server:
+First, run the development server:
 
 ```bash
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the website.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Important: Import from Source
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-Since this package is **not yet published to npm**, the website imports components directly from the parent `src` directory:
-
-```tsx
-import { useCalendarApp, DayFlowCalendar } from '../../src';
-```
-
-The webpack configuration ensures all React imports use the website's React version to avoid "Invalid hook call" errors.
-
-## Build
-
-Build the website for production:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-The website can be deployed to:
-
-- [Vercel](https://vercel.com)
-- [Netlify](https://netlify.com)
-- [GitHub Pages](https://pages.github.com)
-- Any static hosting service
-
-## Structure
-
-```
-website/
-├── pages/
-│   ├── index.tsx              # Interactive homepage with calendar demo
-│   ├── _app.tsx               # App wrapper (imports calendar CSS)
-│   └── docs/                  # Documentation pages (MDX)
-├── components/
-│   ├── InteractiveCalendar.tsx        # Calendar demo component
-│   ├── InteractiveCalendarWrapper.tsx # Dynamic import wrapper
-│   └── Demo.tsx                       # Demo wrapper component
-├── public/                    # Static assets
-├── styles/                    # Global styles
-├── next.config.mjs            # Next.js config (with React alias)
-└── theme.config.tsx           # Nextra theme configuration
-```
-
-## Writing Documentation
-
-Documentation files are written in MDX (Markdown + JSX). You can:
-
-- Use standard Markdown syntax
-- Import and use React components
-- Add interactive examples
-
-Example:
-
-```mdx
-import { Demo } from '@/components/Demo';
-
-# My Page
-
-Some content here.
-
-<Demo>
-  <YourComponent />
-</Demo>
-```
-
-## Troubleshooting
-
-### Clear Cache
-
-If you encounter build issues, try clearing the Next.js cache:
-
-```bash
-rm -rf .next
-npm run dev
-```
-
-### React Version Errors
-
-The website uses React 18.3.1 for compatibility with Next.js 14.2. The webpack configuration in `next.config.mjs` forces all React imports (including from `../../src`) to use the website's React version:
-
-```javascript
-config.resolve.alias = {
-  react: path.resolve(__dirname, './node_modules/react'),
-  'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
-  // ...
-};
-```
-
-This prevents "Invalid hook call" errors when importing from the parent src directory.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
 
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Nextra Documentation](https://nextra.site)
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
