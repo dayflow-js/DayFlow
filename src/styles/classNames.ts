@@ -124,7 +124,7 @@ export const timeColumn = 'w-20 flex-shrink-0 border-gray-200';
 /**
  * Time slot
  */
-export const timeSlot = 'relative h-18 flex';
+export const timeSlot = 'relative h-[4.5rem] flex';
 
 /**
  * Time label
@@ -134,9 +134,8 @@ export const timeLabel = 'absolute -top-2.5 right-2 text-[12px] text-gray-500';
 /**
  * Time grid row
  */
-// TODO: change to h-16
 export const timeGridRow =
-  'h-18 border-t first:border-none border-gray-200 flex';
+  'h-[4.5rem] border-t first:border-none border-gray-200 flex';
 
 /**
  * Time grid cell
