@@ -30,15 +30,19 @@ A flexible and feature-rich calendar component library for React applications wi
 <table>
   <tr>
     <td width="50%">
-      <video src="https://github.com/dayflow-js/dayflow/raw/main/assets/videos/Dayflow1.mp4" controls muted></video>
-    </td>
+
+https://github.com/user-attachments/assets/726a5232-35a8-4fe3-8e7b-4de07c455353
+
+   </td>
     <td width="50%">
-      <video src="https://github.com/dayflow-js/dayflow/raw/main/assets/videos/Dayflow2.mp4" controls muted></video>
-    </td>
+
+https://github.com/user-attachments/assets/957317e5-02d8-4419-a74b-62b7d191e347
+
+   </td>
   </tr>
 </table>
 
-> **Note**: Videos demonstrate the drag-and-drop and resize functionality. For the best experience, view the [live demo](https://dayflow-js.github.io/dayflow/).
+> ⚡ For more features and interactive experience, visit our [live demo](https://dayflow-js.github.io/dayflow/).
 
 ## ✨ Core Features
 
