@@ -53,11 +53,11 @@ body {
   }
 
   .calendar-time-slot {
-    @apply relative h-18 flex;
+    @apply relative h-[4.5rem] flex;
   }
 
   .calendar-time-row {
-    @apply h-18 border-t first:border-none border-gray-200 flex;
+    @apply h-[4.5rem] border-t first:border-none border-gray-200 flex;
   }
 
   .calendar-time-cell {

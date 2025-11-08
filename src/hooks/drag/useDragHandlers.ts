@@ -98,10 +98,23 @@ export const useDragHandlers = (
   const handleUniversalDragMove = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
-      document.body.style.cursor = 'grabbing';
 
       const drag = dragRef.current;
       if (!drag.active) return;
+
+      // Set cursor based on drag mode and direction
+      if (drag.mode === 'resize') {
+        if (drag.allDay) {
+          // AllDay event resize (horizontal)
+          document.body.style.cursor = 'ew-resize';
+        } else {
+          // Regular event resize (vertical)
+          document.body.style.cursor = 'ns-resize';
+        }
+      } else {
+        // Move mode
+        document.body.style.cursor = 'grabbing';
+      }
 
       const isInAllDayArea = checkIfInAllDayArea(e.clientY);
       const newDayIndex = isDayView
@@ -352,10 +365,23 @@ export const useDragHandlers = (
   const handleDragMove = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
-      document.body.style.cursor = 'grabbing';
 
       const drag = dragRef.current;
       if (!drag.active) return;
+
+      // Set cursor based on drag mode and direction
+      if (drag.mode === 'resize') {
+        if (isMonthView || drag.allDay) {
+          // MonthView or AllDay event resize (horizontal)
+          document.body.style.cursor = 'ew-resize';
+        } else {
+          // Regular event resize in Week/Day view (vertical)
+          document.body.style.cursor = 'ns-resize';
+        }
+      } else {
+        // Move or create mode
+        document.body.style.cursor = 'grabbing';
+      }
 
       if (isMonthView) {
         // Month view drag logic

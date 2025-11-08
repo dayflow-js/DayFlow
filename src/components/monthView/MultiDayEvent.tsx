@@ -36,6 +36,7 @@ interface MultiDayEventProps {
   segment: MultiDayEventSegment;
   segmentIndex: number;
   isDragging: boolean;
+  isResizing?: boolean;
   isSelected?: boolean;
   onMoveStart: (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -71,6 +72,7 @@ export const MultiDayEvent = React.memo<MultiDayEventProps>(
     segment,
     segmentIndex,
     isDragging,
+    isResizing = false,
     isSelected = false,
     onMoveStart,
     onResizeStart,
@@ -227,7 +229,7 @@ export const MultiDayEvent = React.memo<MultiDayEventProps>(
 
     return (
       <div
-        className="absolute px-1 text-xs cursor-pointer select-none flex items-center transition-all duration-200 hover:shadow-sm group"
+        className="absolute px-1 text-xs select-none flex items-center transition-all duration-200 hover:shadow-sm group"
         style={{
           left: adjustedLeft,
           width: adjustedWidth,
@@ -251,7 +253,14 @@ export const MultiDayEvent = React.memo<MultiDayEventProps>(
         title={`${segment.event.title} (${formatDateConsistent(segment.event.start)} - ${formatDateConsistent(segment.event.end)})`}
       >
         {renderResizeHandle('left')}
-        {renderEventContent()}
+        <div
+          className="flex-1 min-w-0"
+          style={{
+            cursor: isResizing ? 'ew-resize' : 'pointer'
+          }}
+        >
+          {renderEventContent()}
+        </div>
         {renderResizeHandle('right')}
       </div>
     );

@@ -54,6 +54,7 @@ interface CalendarEventProps {
   allDayHeight?: number;
   calendarRef: React.RefObject<HTMLDivElement | null>;
   isBeingDragged?: boolean;
+  isBeingResized?: boolean;
   isDayView?: boolean;
   isMonthView?: boolean;
   isMultiDay?: boolean;
@@ -93,6 +94,7 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
   allDayHeight = 28,
   calendarRef,
   isBeingDragged = false,
+  isBeingResized = false,
   isDayView = false,
   isMonthView = false,
   isMultiDay = false,
@@ -1057,6 +1059,7 @@ const CalendarEvent: React.FC<CalendarEventProps> = ({
         segment={segment}
         segmentIndex={segmentIndex ?? 0}
         isDragging={isBeingDragged || isEventSelected}
+        isResizing={isBeingResized}
         isSelected={isEventSelected}
         onMoveStart={onMoveStart || (() => { })}
         onResizeStart={onResizeStart}
