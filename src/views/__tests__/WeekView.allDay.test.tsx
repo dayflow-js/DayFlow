@@ -4,6 +4,7 @@ import { Temporal } from 'temporal-polyfill';
 import WeekView from '@/views/WeekView';
 import { CalendarApp } from '@/core';
 import { ViewType, CalendarAppConfig } from '@/types';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 jest.mock('@/plugins/dragPlugin', () => ({
   useDragForView: () => ({
@@ -40,20 +41,28 @@ const createAppWithEvent = (override?: Partial<CalendarAppConfig>) => {
 };
 
 describe('WeekView all-day multi-day events', () => {
-  it('spans all intended days without requiring user interaction', () => {
-    const app = createAppWithEvent();
+  const renderWeekView = (app: CalendarApp) => {
     const calendarRef = React.createRef<HTMLDivElement>();
 
     render(
-      <div ref={calendarRef}>
-        <WeekView
-          app={app}
-          calendarRef={calendarRef}
-          customDetailPanelContent={undefined}
-          customEventDetailDialog={undefined}
-        />
-      </div>
+      <ThemeProvider initialTheme={app.getTheme()}>
+        <div ref={calendarRef}>
+          <WeekView
+            app={app}
+            calendarRef={calendarRef}
+            customDetailPanelContent={undefined}
+            customEventDetailDialog={undefined}
+          />
+        </div>
+      </ThemeProvider>
     );
+
+    return calendarRef;
+  };
+
+  it('spans all intended days without requiring user interaction', () => {
+    const app = createAppWithEvent();
+    renderWeekView(app);
 
     const eventLabel = screen.getByText('Event A');
     const eventNode = eventLabel.closest('.calendar-event') as HTMLElement;
@@ -80,18 +89,7 @@ describe('WeekView all-day multi-day events', () => {
       ],
     });
 
-    const calendarRef = React.createRef<HTMLDivElement>();
-
-    render(
-      <div ref={calendarRef}>
-        <WeekView
-          app={app}
-          calendarRef={calendarRef}
-          customDetailPanelContent={undefined}
-          customEventDetailDialog={undefined}
-        />
-      </div>
-    );
+    renderWeekView(app);
 
     const eventLabel = screen.getByText('Event B');
     const eventNode = eventLabel.closest('.calendar-event') as HTMLElement;
@@ -103,18 +101,7 @@ describe('WeekView all-day multi-day events', () => {
 
   it('keeps single-day all-day duration unchanged after double click', async () => {
     const app = createAppWithEvent();
-    const calendarRef = React.createRef<HTMLDivElement>();
-
-    render(
-      <div ref={calendarRef}>
-        <WeekView
-          app={app}
-          calendarRef={calendarRef}
-          customDetailPanelContent={undefined}
-          customEventDetailDialog={undefined}
-        />
-      </div>
-    );
+    renderWeekView(app);
 
     const eventLabel = screen.getByText('Event A');
     const eventNode = eventLabel.closest('.calendar-event') as HTMLElement;
@@ -147,18 +134,7 @@ describe('WeekView all-day multi-day events', () => {
       initialDate: new Date('2024-10-28T00:00:00'),
     });
 
-    const calendarRef = React.createRef<HTMLDivElement>();
-
-    render(
-      <div ref={calendarRef}>
-        <WeekView
-          app={app}
-          calendarRef={calendarRef}
-          customDetailPanelContent={undefined}
-          customEventDetailDialog={undefined}
-        />
-      </div>
-    );
+    renderWeekView(app);
 
     const eventLabel = screen.getByText('Cross Week Event');
     const eventNode = eventLabel.closest('.calendar-event') as HTMLElement;

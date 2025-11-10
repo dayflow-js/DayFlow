@@ -7,18 +7,11 @@ import {
 import DefaultCalendarSidebar from '@/components/sidebar/DefaultCalendarSidebar';
 import DefaultEventDetailDialog from '@/components/common/DefaultEventDetailDialog';
 import { CalendarSidebarRenderProps } from '@/types';
+import { normalizeCssWidth } from '@/utils/styleUtils';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { ThemeMode } from '@/types/calendarTypes';
 
 const DEFAULT_SIDEBAR_WIDTH = '240px';
-
-const toCssWidth = (width?: number | string): string => {
-  if (typeof width === 'number') {
-    return `${width}px`;
-  }
-  if (typeof width === 'string' && width.trim().length > 0) {
-    return width;
-  }
-  return DEFAULT_SIDEBAR_WIDTH;
-};
 
 interface DayFlowCalendarProps {
   calendar: UseCalendarAppReturn;
@@ -49,9 +42,28 @@ export const DayFlowCalendar: React.FC<DayFlowCalendarProps> = ({
     sidebarConfig?.initialCollapsed ?? false
   );
 
+  // Theme state
+  const [theme, setTheme] = useState<ThemeMode>(() => app.getTheme());
+
   useEffect(() => {
     setIsCollapsed(sidebarConfig?.initialCollapsed ?? false);
   }, [sidebarConfig?.initialCollapsed]);
+
+  // Subscribe to theme changes from CalendarApp
+  useEffect(() => {
+    const unsubscribe = app.subscribeThemeChange((newTheme) => {
+      setTheme(newTheme);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [app]);
+
+  // Sync theme changes from ThemeProvider back to CalendarApp
+  const handleThemeChange = useCallback((newTheme: ThemeMode) => {
+    app.setTheme(newTheme);
+  }, [app]);
 
   const refreshSidebar = useCallback(() => {
     setSidebarVersion(prev => prev + 1);
@@ -121,32 +133,34 @@ export const DayFlowCalendar: React.FC<DayFlowCalendarProps> = ({
   const collapsedWidth = '60px';
   const resolvedSidebarWidth = isCollapsed
     ? collapsedWidth
-    : toCssWidth(sidebarConfig?.width);
+    : normalizeCssWidth(sidebarConfig?.width, DEFAULT_SIDEBAR_WIDTH);
   const contentClassName = 'flex flex-col flex-1 h-full';
 
 
   return (
-    <div className="calendar-container" style={style ?? {
-      height: 800,
-    }}>
-      <div className="flex h-full" >
-        {sidebarEnabled && (
-          <aside
-            className="flex-shrink-0"
-            style={{ width: resolvedSidebarWidth }}
-          >
-            {renderSidebarContent()}
-          </aside>
-        )}
-        <div className={contentClassName} ref={calendarRef}>
-          <div className="calendar-renderer h-full">
-            <ViewComponent {...viewProps} />
+    <ThemeProvider initialTheme={theme} onThemeChange={handleThemeChange}>
+      <div
+        className={`calendar-container ${className ?? ''}`}
+        style={{ height: 800, ...style }}
+      >
+        <div className="flex h-full" >
+          {sidebarEnabled && (
+            <aside
+              className="shrink-0"
+              style={{ width: resolvedSidebarWidth }}
+            >
+              {renderSidebarContent()}
+            </aside>
+          )}
+          <div className={contentClassName} ref={calendarRef}>
+            <div className="calendar-renderer h-full">
+              <ViewComponent {...viewProps} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 };
 
-// Default export
 export default DayFlowCalendar;

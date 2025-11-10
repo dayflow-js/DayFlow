@@ -45,5 +45,11 @@ export {
 
 export * from './rangePicker';
 
+// Style utilities
+export * from './styleUtils';
+
+// Theme utilities
+export * from './themeUtils';
+
 // Event creation helper functions
 export * from './eventHelpers';

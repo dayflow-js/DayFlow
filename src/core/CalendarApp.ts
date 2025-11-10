@@ -16,18 +16,10 @@ import {
   setDefaultCalendarRegistry,
 } from './calendarRegistry';
 import { logger } from '@/utils/logger';
+import { normalizeCssWidth } from '@/utils/styleUtils';
+import { ThemeMode } from '@/types/calendarTypes';
 
 const DEFAULT_SIDEBAR_WIDTH = '240px';
-
-const normalizeSidebarWidth = (width?: number | string): string => {
-  if (typeof width === 'number') {
-    return `${width}px`;
-  }
-  if (typeof width === 'string' && width.trim().length > 0) {
-    return width;
-  }
-  return DEFAULT_SIDEBAR_WIDTH;
-};
 
 const resolveSidebarConfig = (
   input?: boolean | SidebarConfig
@@ -52,7 +44,7 @@ const resolveSidebarConfig = (
 
   return {
     enabled,
-    width: normalizeSidebarWidth(width),
+    width: normalizeCssWidth(width, DEFAULT_SIDEBAR_WIDTH),
     initialCollapsed,
     render,
   };
@@ -65,6 +57,7 @@ export class CalendarApp implements ICalendarApp {
   private sidebarConfig: SidebarConfig;
   private visibleMonth: Date;
   private useEventDetailDialog: boolean;
+  private themeChangeListeners: Set<(theme: ThemeMode) => void>;
 
   constructor(config: CalendarAppConfig) {
     // Initialize state
@@ -78,6 +71,7 @@ export class CalendarApp implements ICalendarApp {
     };
 
     this.callbacks = config.callbacks || {};
+    this.themeChangeListeners = new Set();
 
     // Initialize CalendarRegistry
     this.calendarRegistry = new CalendarRegistry(
@@ -348,5 +342,52 @@ export class CalendarApp implements ICalendarApp {
   // Get whether to use event detail dialog
   getUseEventDetailDialog = (): boolean => {
     return this.useEventDetailDialog;
+  };
+
+  // Theme management
+  /**
+   * Set theme mode
+   * @param mode - Theme mode ('light', 'dark', or 'auto')
+   */
+  setTheme = (mode: ThemeMode): void => {
+    this.calendarRegistry.setTheme(mode);
+
+    // Notify all listeners
+    this.themeChangeListeners.forEach(listener => {
+      listener(mode);
+    });
+
+    // Trigger re-render
+    this.callbacks.onRender?.();
+  };
+
+  /**
+   * Get current theme mode
+   * @returns Current theme mode
+   */
+  getTheme = (): ThemeMode => {
+    return this.calendarRegistry.getTheme();
+  };
+
+  /**
+   * Subscribe to theme changes
+   * @param callback - Function to call when theme changes
+   * @returns Unsubscribe function
+   */
+  subscribeThemeChange = (callback: (theme: ThemeMode) => void): (() => void) => {
+    this.themeChangeListeners.add(callback);
+
+    // Return unsubscribe function
+    return () => {
+      this.unsubscribeThemeChange(callback);
+    };
+  };
+
+  /**
+   * Unsubscribe from theme changes
+   * @param callback - Function to remove from listeners
+   */
+  unsubscribeThemeChange = (callback: (theme: ThemeMode) => void): void => {
+    this.themeChangeListeners.delete(callback);
   };
 }

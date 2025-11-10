@@ -52,6 +52,7 @@ export function InteractiveCalendar() {
     useSidebar: {
       enabled: true,
     },
+    theme: { mode: 'auto' }
   });
 
   return (

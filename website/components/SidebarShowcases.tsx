@@ -171,6 +171,7 @@ const useSidebarCalendar = (sidebarConfig: boolean | SidebarConfig) => {
     initialDate: new Date(),
     switcherMode: 'buttons',
     useSidebar: sidebarConfig,
+    theme: { mode: 'auto' }
   });
 };
 

@@ -178,6 +178,7 @@ const useDemoCalendar = ({
     defaultView: ViewType.MONTH,
     initialDate: new Date(),
     switcherMode: switcherMode ?? 'buttons',
+    theme: { mode: 'auto' }
   });
 };
 
@@ -434,19 +435,19 @@ export const CustomDetailDialogShowcase: React.FC = () => {
         : hasValidStart && hasValidEnd
           ? sameDay
             ? `${timeFormatter.format(startDate)} – ${timeFormatter.format(
-                endDate
-              )}`
+              endDate
+            )}`
             : `${startDayLabel} ${timeFormatter.format(
-                startDate
-              )} → ${endDayLabel} ${timeFormatter.format(endDate)}`
+              startDate
+            )} → ${endDayLabel} ${timeFormatter.format(endDate)}`
           : 'Time to be scheduled';
 
       const diffMinutes =
         hasValidStart && hasValidEnd
           ? Math.max(
-              0,
-              Math.round((endDate.getTime() - startDate.getTime()) / 60000)
-            )
+            0,
+            Math.round((endDate.getTime() - startDate.getTime()) / 60000)
+          )
           : 0;
       let durationLabel = '';
       if (isAllDayEvent) {
@@ -466,9 +467,9 @@ export const CustomDetailDialogShowcase: React.FC = () => {
 
       const timeZoneLabel =
         !isAllDayEvent &&
-        hasValidStart &&
-        event.start instanceof Temporal.ZonedDateTime &&
-        typeof event.start.timeZoneId === 'string'
+          hasValidStart &&
+          event.start instanceof Temporal.ZonedDateTime &&
+          typeof event.start.timeZoneId === 'string'
           ? event.start.timeZoneId
           : hasValidStart && !isAllDayEvent
             ? 'Local time'
@@ -500,9 +501,9 @@ export const CustomDetailDialogShowcase: React.FC = () => {
         },
         durationLabel
           ? {
-              icon: Clock3,
-              label: `Duration · ${durationLabel}`,
-            }
+            icon: Clock3,
+            label: `Duration · ${durationLabel}`,
+          }
           : null,
       ].filter(Boolean) as Array<{
         icon: React.ComponentType<{ className?: string; size?: number }>;
@@ -583,9 +584,8 @@ export const CustomDetailDialogShowcase: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleToggleFavorite}
-                    className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 ${
-                      isFavorite ? 'bg-white/20 backdrop-blur' : 'hover:bg-white/15'
-                    }`}
+                    className={`inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 ${isFavorite ? 'bg-white/20 backdrop-blur' : 'hover:bg-white/15'
+                      }`}
                     aria-label={
                       isFavorite ? 'Remove from focus list' : 'Add to focus list'
                     }
@@ -605,172 +605,170 @@ export const CustomDetailDialogShowcase: React.FC = () => {
                 <div className="space-y-5">
                   <div className="rounded-2xl border border-gray-100 bg-white/60 p-5 shadow-sm backdrop-blur">
                     <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Schedule
-                  </h3>
-                  <div className="mt-4 space-y-4">
-                    {[
-                      {
-                        title: 'Starts',
-                        date: startDayLabel,
-                        time: isAllDayEvent
-                          ? 'All day'
-                          : hasValidStart
-                            ? timeFormatter.format(startDate)
-                            : 'Time TBD',
-                      },
-                      {
-                        title: 'Wraps',
-                        date: endDayLabel,
-                        time: isAllDayEvent
-                          ? sameDay && hasValidEnd
-                            ? 'Same day'
-                            : endDayLabel
-                          : hasValidEnd
-                            ? timeFormatter.format(endDate)
-                            : 'Time TBD',
-                      },
-                    ].map(({ title, date, time }) => (
-                      <div key={title} className="flex items-start gap-3">
-                        <span
-                          className="mt-1 h-2.5 w-2.5 rounded-full"
-                          style={{ backgroundColor: accentColor }}
-                        />
+                      Schedule
+                    </h3>
+                    <div className="mt-4 space-y-4">
+                      {[
+                        {
+                          title: 'Starts',
+                          date: startDayLabel,
+                          time: isAllDayEvent
+                            ? 'All day'
+                            : hasValidStart
+                              ? timeFormatter.format(startDate)
+                              : 'Time TBD',
+                        },
+                        {
+                          title: 'Wraps',
+                          date: endDayLabel,
+                          time: isAllDayEvent
+                            ? sameDay && hasValidEnd
+                              ? 'Same day'
+                              : endDayLabel
+                            : hasValidEnd
+                              ? timeFormatter.format(endDate)
+                              : 'Time TBD',
+                        },
+                      ].map(({ title, date, time }) => (
+                        <div key={title} className="flex items-start gap-3">
+                          <span
+                            className="mt-1 h-2.5 w-2.5 rounded-full"
+                            style={{ backgroundColor: accentColor }}
+                          />
+                          <div>
+                            <p className="text-sm font-medium text-gray-900">{title}</p>
+                            <p className="text-xs text-gray-500">
+                              {date}
+                              {time ? ` · ${time}` : ''}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {durationLabel && (
+                        <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600">
+                          <Clock3 className="h-4 w-4" />
+                          {durationLabel}
+                        </span>
+                      )}
+                      {timeZoneLabel && (
+                        <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+                          <Clock3 className="h-4 w-4" />
+                          {timeZoneLabel}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Logistics
+                    </h3>
+                    <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                      <div className="flex items-start gap-3">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+                          <User className="h-5 w-5" />
+                        </span>
                         <div>
-                          <p className="text-sm font-medium text-gray-900">{title}</p>
-                          <p className="text-xs text-gray-500">
-                            {date}
-                            {time ? ` · ${time}` : ''}
+                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            Host
+                          </p>
+                          <p className="text-sm text-gray-900">
+                            {(meta.owner as string) ?? 'Unassigned'}
                           </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {durationLabel && (
-                      <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-600">
-                        <Clock3 className="h-4 w-4" />
-                        {durationLabel}
-                      </span>
-                    )}
-                    {timeZoneLabel && (
-                      <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
-                        <Clock3 className="h-4 w-4" />
-                        {timeZoneLabel}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Logistics
-                  </h3>
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                    <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
-                        <User className="h-5 w-5" />
-                      </span>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          Host
-                        </p>
-                        <p className="text-sm text-gray-900">
-                          {(meta.owner as string) ?? 'Unassigned'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
-                        <MapPin className="h-5 w-5" />
-                      </span>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          Location
-                        </p>
-                        <p className="text-sm text-gray-900">{location}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-4">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                      Participants
-                    </p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {participants.map(participant => (
-                        <span
-                          key={participant}
-                          className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 shadow-sm"
-                        >
-                          <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
-                          {participant}
+                      <div className="flex items-start gap-3">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+                          <MapPin className="h-5 w-5" />
                         </span>
-                      ))}
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            Location
+                          </p>
+                          <p className="text-sm text-gray-900">{location}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Participants
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {participants.map(participant => (
+                          <span
+                            key={participant}
+                            className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 shadow-sm"
+                          >
+                            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" />
+                            {participant}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-5">
-                <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Personalize
-                  </h3>
-                  <p className="mt-2 text-xs text-gray-500">
-                    Update highlight colors to match your brand palette.
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {colorPresets.map(({ id, color }) => {
-                      const isActive =
-                        event.calendarId === id ||
-                        (typeof event.calendarId === 'string' &&
-                          event.calendarId.toLowerCase() ===
+                <div className="space-y-5">
+                  <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Personalize
+                    </h3>
+                    <p className="mt-2 text-xs text-gray-500">
+                      Update highlight colors to match your brand palette.
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {colorPresets.map(({ id, color }) => {
+                        const isActive =
+                          event.calendarId === id ||
+                          (typeof event.calendarId === 'string' &&
+                            event.calendarId.toLowerCase() ===
                             color.toLowerCase());
-                      return (
-                        <button
-                          key={id}
-                          type="button"
-                          onClick={() => handleUpdateColor(id)}
-                          className={`h-9 w-9 rounded-full border-2 border-white shadow-sm transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
-                            isActive ? 'ring-2 ring-offset-white' : ''
-                          }`}
-                          style={{ backgroundColor: color }}
-                          aria-label={`Change color to ${id}`}
-                        />
-                      );
-                    })}
+                        return (
+                          <button
+                            key={id}
+                            type="button"
+                            onClick={() => handleUpdateColor(id)}
+                            className={`h-9 w-9 rounded-full border-2 border-white shadow-sm transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white ${isActive ? 'ring-2 ring-offset-white' : ''
+                              }`}
+                            style={{ backgroundColor: color }}
+                            aria-label={`Change color to ${id}`}
+                          />
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
 
-                <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                    Quick actions
-                  </h3>
-                  <div className="mt-4 space-y-3">
-                    <button
-                      type="button"
-                      onClick={handleToggleFavorite}
-                      className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm font-medium transition ${
-                        isFavorite
-                          ? 'border-amber-200 bg-amber-50 text-amber-700'
-                          : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
-                      }`}
-                    >
-                      <span>
-                        {isFavorite ? 'Added to focus list' : 'Add to focus list'}
-                      </span>
-                      <Star className="h-4 w-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleDelete}
-                      className="flex w-full items-center justify-between rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 transition hover:bg-red-100"
-                    >
-                      <span>Delete event</span>
-                      <X className="h-4 w-4" />
-                    </button>
+                  <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      Quick actions
+                    </h3>
+                    <div className="mt-4 space-y-3">
+                      <button
+                        type="button"
+                        onClick={handleToggleFavorite}
+                        className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm font-medium transition ${isFavorite
+                            ? 'border-amber-200 bg-amber-50 text-amber-700'
+                            : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                          }`}
+                      >
+                        <span>
+                          {isFavorite ? 'Added to focus list' : 'Add to focus list'}
+                        </span>
+                        <Star className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleDelete}
+                        className="flex w-full items-center justify-between rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 transition hover:bg-red-100"
+                      >
+                        <span>Delete event</span>
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
                 </div>
               </div>
               <div className="mt-6 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 text-xs text-gray-500">

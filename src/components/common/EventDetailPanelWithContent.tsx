@@ -4,6 +4,7 @@ import {
   EventDetailPanelProps,
   EventDetailContentRenderer,
 } from '@/types/eventDetail';
+import { useTheme } from '@/contexts/ThemeContext';
 
 /**
  * Event detail panel wrapper for rendering custom content in the default panel
@@ -28,6 +29,11 @@ export const EventDetailPanelWithContent: React.FC<
   onClose,
   contentRenderer: ContentComponent,
 }) => {
+    const { effectiveTheme } = useTheme();
+    const arrowBgColor = effectiveTheme === 'dark' ? '#1f2937' : 'white';
+    const arrowBorderColor =
+      effectiveTheme === 'dark' ? 'rgb(55, 65, 81)' : 'rgb(229, 231, 235)';
+
     // Calculate arrow style (same logic as DefaultEventDetailPanel)
     const calculateArrowStyle = (): React.CSSProperties => {
       let arrowStyle: React.CSSProperties = {};
@@ -44,14 +50,14 @@ export const EventDetailPanelWithContent: React.FC<
             position: 'absolute',
             width: '12px',
             height: '12px',
-            backgroundColor: 'white',
+            backgroundColor: arrowBgColor,
             transform: 'rotate(45deg)',
             transformOrigin: 'center',
             top: `${arrowRelativeY - 6}px`,
-            borderRight: `${position.isSunday ? '1px solid rgb(229, 231, 235)' : 'none'}`,
-            borderTop: `${position.isSunday ? '1px solid rgb(229, 231, 235)' : 'none'}`,
-            borderLeft: `${position.isSunday ? 'none' : '1px solid rgb(229, 231, 235)'}`,
-            borderBottom: `${position.isSunday ? 'none' : '1px solid rgb(229, 231, 235)'}`,
+            borderRight: `${position.isSunday ? `1px solid ${arrowBorderColor}` : 'none'}`,
+            borderTop: `${position.isSunday ? `1px solid ${arrowBorderColor}` : 'none'}`,
+            borderLeft: `${position.isSunday ? 'none' : `1px solid ${arrowBorderColor}`}`,
+            borderBottom: `${position.isSunday ? 'none' : `1px solid ${arrowBorderColor}`}`,
             ...(position.isSunday ? { right: '-6px' } : { left: '-6px' }),
           };
         }
@@ -72,16 +78,16 @@ export const EventDetailPanelWithContent: React.FC<
           position: 'absolute',
           width: '12px',
           height: '12px',
-          backgroundColor: 'white',
+          backgroundColor: arrowBgColor,
           transform: 'rotate(45deg)',
           transformOrigin: 'center',
           top: `${arrowTop}px`,
           left: position.isSunday ? undefined : '-6px',
           right: position.isSunday ? '-6px' : undefined,
-          borderRight: `${position.isSunday ? '1px solid rgb(229, 231, 235)' : 'none'}`,
-          borderTop: `${position.isSunday ? '1px solid rgb(229, 231, 235)' : 'none'}`,
-          borderLeft: `${position.isSunday ? 'none' : '1px solid rgb(229, 231, 235)'}`,
-          borderBottom: `${position.isSunday ? 'none' : '1px solid rgb(229, 231, 235)'}`,
+          borderRight: `${position.isSunday ? `1px solid ${arrowBorderColor}` : 'none'}`,
+          borderTop: `${position.isSunday ? `1px solid ${arrowBorderColor}` : 'none'}`,
+          borderLeft: `${position.isSunday ? 'none' : `1px solid ${arrowBorderColor}`}`,
+          borderBottom: `${position.isSunday ? 'none' : `1px solid ${arrowBorderColor}`}`,
         };
       } else {
         if (position && selectedEventElementRef.current && calendarRef.current) {
@@ -132,14 +138,14 @@ export const EventDetailPanelWithContent: React.FC<
               position: 'absolute',
               width: '12px',
               height: '12px',
-              backgroundColor: 'white',
+              backgroundColor: arrowBgColor,
               transform: 'rotate(45deg)',
               transformOrigin: 'center',
               top: `${finalArrowY - 6}px`,
-              borderRight: `${position.isSunday ? '1px solid rgb(229, 231, 235)' : 'none'}`,
-              borderTop: `${position.isSunday ? '1px solid rgb(229, 231, 235)' : 'none'}`,
-              borderLeft: `${position.isSunday ? 'none' : '1px solid rgb(229, 231, 235)'}`,
-              borderBottom: `${position.isSunday ? 'none' : '1px solid rgb(229, 231, 235)'}`,
+              borderRight: `${position.isSunday ? `1px solid ${arrowBorderColor}` : 'none'}`,
+              borderTop: `${position.isSunday ? `1px solid ${arrowBorderColor}` : 'none'}`,
+              borderLeft: `${position.isSunday ? 'none' : `1px solid ${arrowBorderColor}`}`,
+              borderBottom: `${position.isSunday ? 'none' : `1px solid ${arrowBorderColor}`}`,
               ...(position.isSunday ? { right: '-6px' } : { left: '-6px' }),
             };
           }
@@ -154,14 +160,14 @@ export const EventDetailPanelWithContent: React.FC<
     const panelContent = (
       <div
         ref={panelRef}
-        className="fixed bg-white shadow-lg border border-gray-200 rounded-lg p-3"
+        className="fixed bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg p-3"
         data-event-detail-panel="true"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
           zIndex: 9999,
           pointerEvents: 'auto',
-          backgroundColor: '#ffffff',
+          backgroundColor: effectiveTheme === 'dark' ? '#1f2937' : '#ffffff',
         }}
       >
         <div style={arrowStyle}></div>
