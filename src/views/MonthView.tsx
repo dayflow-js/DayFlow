@@ -18,6 +18,7 @@ import { useDragForView } from '@/plugins/dragPlugin';
 import ViewHeader, { ViewSwitcherMode } from '@/components/common/ViewHeader';
 import WeekComponent from '@/components/monthView/WeekComponent';
 import { temporalToDate } from '@/utils/temporal';
+import { useCalendarDrop } from '@/hooks/useCalendarDrop';
 import {
   monthViewContainer,
   weekHeaderRow,
@@ -234,6 +235,14 @@ const MonthView: React.FC<MonthViewProps> = ({
     },
     currentWeekStart,
     events,
+  });
+
+  // Use calendar drop functionality
+  const { handleDrop, handleDragOver } = useCalendarDrop({
+    app,
+    onEventCreated: (event: Event) => {
+      setNewlyCreatedEventId(event.id);
+    },
   });
 
   const {
@@ -455,6 +464,8 @@ const MonthView: React.FC<MonthViewProps> = ({
               onDetailPanelToggle={setDetailPanelEventId}
               customDetailPanelContent={customDetailPanelContent}
               customEventDetailDialog={customEventDetailDialog}
+              onCalendarDrop={handleDrop}
+              onCalendarDragOver={handleDragOver}
             />
           );
         })}

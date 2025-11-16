@@ -24,6 +24,7 @@ import ViewHeader, { ViewSwitcherMode } from '@/components/common/ViewHeader';
 import TodayBox from '@/components/common/TodayBox';
 import ViewSwitcher from '@/components/common/ViewSwitcher';
 import { temporalToDate, dateToZonedDateTime } from '@/utils/temporal';
+import { useCalendarDrop } from '@/hooks/useCalendarDrop';
 import {
   allDayRow,
   allDayLabel,
@@ -78,6 +79,9 @@ const DayView: React.FC<DayViewProps> = ({
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [detailPanelEventId, setDetailPanelEventId] = useState<string | null>(
+    null
+  );
+  const [newlyCreatedEventId, setNewlyCreatedEventId] = useState<string | null>(
     null
   );
 
@@ -269,6 +273,14 @@ const DayView: React.FC<DayViewProps> = ({
     calculateDragLayout,
   });
 
+  // Use calendar drop functionality
+  const { handleDrop, handleDragOver } = useCalendarDrop({
+    app,
+    onEventCreated: (event: Event) => {
+      setNewlyCreatedEventId(event.id);
+    },
+  });
+
   // Event handling functions
   const handleEventUpdate = (updatedEvent: Event) => {
     app.updateEvent(updatedEvent.id, updatedEvent);
@@ -386,6 +398,10 @@ const DayView: React.FC<DayViewProps> = ({
                   );
                   handleCreateAllDayEvent?.(e, currentDayIndex);
                 }}
+                onDragOver={handleDragOver}
+                onDrop={e => {
+                  handleDrop(e, currentDate, undefined, true);
+                }}
               >
                 {currentDayEvents
                   .filter(event => event.allDay)
@@ -407,6 +423,8 @@ const DayView: React.FC<DayViewProps> = ({
                       onMoveStart={handleMoveStart}
                       onEventUpdate={handleEventUpdate}
                       onEventDelete={handleEventDelete}
+                      newlyCreatedEventId={newlyCreatedEventId}
+                      onDetailPanelOpen={() => setNewlyCreatedEventId(null)}
                       detailPanelEventId={detailPanelEventId}
                       onDetailPanelToggle={(eventId: string | null) =>
                         setDetailPanelEventId(eventId)
@@ -495,6 +513,23 @@ const DayView: React.FC<DayViewProps> = ({
                       const clickedHour = FIRST_HOUR + relativeY / HOUR_HEIGHT;
                       handleCreateStart(e, currentDayIndex, clickedHour);
                     }}
+                    onDragOver={handleDragOver}
+                    onDrop={e => {
+                      const rect = calendarRef.current
+                        ?.querySelector('.calendar-content')
+                        ?.getBoundingClientRect();
+                      if (!rect) return;
+                      const relativeY =
+                        e.clientY -
+                        rect.top +
+                        (
+                          calendarRef.current?.querySelector(
+                            '.calendar-content'
+                          ) as HTMLElement
+                        )?.scrollTop || 0;
+                      const dropHour = Math.floor(FIRST_HOUR + relativeY / HOUR_HEIGHT);
+                      handleDrop(e, currentDate, dropHour);
+                    }}
                   />
                 ))}
 
@@ -530,6 +565,8 @@ const DayView: React.FC<DayViewProps> = ({
                           onResizeStart={handleResizeStart}
                           onEventUpdate={handleEventUpdate}
                           onEventDelete={handleEventDelete}
+                          newlyCreatedEventId={newlyCreatedEventId}
+                          onDetailPanelOpen={() => setNewlyCreatedEventId(null)}
                           detailPanelEventId={detailPanelEventId}
                           onDetailPanelToggle={(eventId: string | null) =>
                             setDetailPanelEventId(eventId)
