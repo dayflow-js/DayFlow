@@ -33,6 +33,30 @@ const DefaultCalendarSidebar: React.FC<CalendarSidebarRenderProps> = ({
   const visibleYear = visibleMonthDate.getFullYear();
   const visibleMonthIndex = visibleMonthDate.getMonth();
 
+  // Drag state
+  const [isDragging, setIsDragging] = useState(false);
+  const [draggedCalendarId, setDraggedCalendarId] = useState<string | null>(null);
+
+  const handleDragStart = useCallback((calendar: CalendarType, e: React.DragEvent) => {
+    setIsDragging(true);
+    setDraggedCalendarId(calendar.id);
+
+    // Store calendar data for drop handling
+    const dragData = {
+      calendarId: calendar.id,
+      calendarName: calendar.name,
+      calendarColors: calendar.colors,
+      calendarIcon: calendar.icon,
+    };
+    e.dataTransfer.setData('application/x-dayflow-calendar', JSON.stringify(dragData));
+    e.dataTransfer.effectAllowed = 'copy';
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    setIsDragging(false);
+    setDraggedCalendarId(null);
+  }, []);
+
   const [visibleMonth, setVisibleMonth] = useState<Date>(() => {
     return new Date(visibleYear, visibleMonthIndex, 1);
   });
@@ -148,33 +172,42 @@ const DefaultCalendarSidebar: React.FC<CalendarSidebarRenderProps> = ({
                 const showIcon = Boolean(calendar.icon);
                 return (
                   <li key={calendar.id}>
-                    <label
-                      className="group flex cursor-pointer items-center rounded px-2 py-2 transition hover:bg-gray-100 dark:hover:bg-slate-800"
-                      title={calendar.name}
+                    <div
+                      draggable
+                      onDragStart={(e) => handleDragStart(calendar, e)}
+                      onDragEnd={handleDragEnd}
+                      className={`rounded transition ${
+                        draggedCalendarId === calendar.id ? 'opacity-50' : ''
+                      }`}
                     >
-                      <input
-                        type="checkbox"
-                        className="calendar-checkbox"
-                        style={{
-                          '--checkbox-color': calendarColor,
-                        } as React.CSSProperties}
-                        checked={isVisible}
-                        onChange={event =>
-                          toggleCalendarVisibility(calendar.id, event.target.checked)
-                        }
-                      />
-                      {showIcon && (
-                        <span
-                          className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center text-xs font-semibold text-white"
-                          aria-hidden="true"
-                        >
-                          {getCalendarInitials(calendar)}
+                      <label
+                        className="group flex cursor-pointer items-center rounded px-2 py-2 transition hover:bg-gray-100 dark:hover:bg-slate-800"
+                        title={calendar.name}
+                      >
+                        <input
+                          type="checkbox"
+                          className="calendar-checkbox"
+                          style={{
+                            '--checkbox-color': calendarColor,
+                          } as React.CSSProperties}
+                          checked={isVisible}
+                          onChange={event =>
+                            toggleCalendarVisibility(calendar.id, event.target.checked)
+                          }
+                        />
+                        {showIcon && (
+                          <span
+                            className="mr-2 flex h-5 w-5 flex-shrink-0 items-center justify-center text-xs font-semibold text-white"
+                            aria-hidden="true"
+                          >
+                            {getCalendarInitials(calendar)}
+                          </span>
+                        )}
+                        <span className="flex-1 truncate text-sm text-gray-700 group-hover:text-gray-900 dark:text-gray-200 dark:group-hover:text-white">
+                          {calendar.name || calendar.id}
                         </span>
-                      )}
-                      <span className="flex-1 truncate text-sm text-gray-700 group-hover:text-gray-900 dark:text-gray-200 dark:group-hover:text-white">
-                        {calendar.name || calendar.id}
-                      </span>
-                    </label>
+                      </label>
+                    </div>
                   </li>
                 );
               })}
@@ -235,35 +268,44 @@ const DefaultCalendarSidebar: React.FC<CalendarSidebarRenderProps> = ({
               const showIcon = Boolean(calendar.icon);
               return (
                 <li key={calendar.id}>
-                  <label
-                    className="group flex cursor-pointer items-center rounded px-2 py-2 transition hover:bg-gray-100 dark:hover:bg-slate-800"
-                    title={calendar.name}
+                  <div
+                    draggable
+                    onDragStart={(e) => handleDragStart(calendar, e)}
+                    onDragEnd={handleDragEnd}
+                    className={`rounded transition ${
+                      draggedCalendarId === calendar.id ? 'opacity-50' : ''
+                    }`}
                   >
-                    <input
-                      type="checkbox"
-                      className="calendar-checkbox"
-                      style={{
-                        '--checkbox-color': calendarColor,
-                      } as React.CSSProperties}
-                      checked={isVisible}
-                      onChange={event =>
-                        toggleCalendarVisibility(calendar.id, event.target.checked)
-                      }
-                    />
-                    {/* {showIcon && (
-                      <span
-                        className="mr-2 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white"
-                        style={{ backgroundColor: calendarColor }}
-                        aria-hidden="true"
-                      >
-                        {getCalendarInitials(calendar)}
+                    <label
+                      className="group flex cursor-pointer items-center rounded px-2 py-2 transition hover:bg-gray-100 dark:hover:bg-slate-800"
+                      title={calendar.name}
+                    >
+                      <input
+                        type="checkbox"
+                        className="calendar-checkbox"
+                        style={{
+                          '--checkbox-color': calendarColor,
+                        } as React.CSSProperties}
+                        checked={isVisible}
+                        onChange={event =>
+                          toggleCalendarVisibility(calendar.id, event.target.checked)
+                        }
+                      />
+                      {/* {showIcon && (
+                        <span
+                          className="mr-2 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white"
+                          style={{ backgroundColor: calendarColor }}
+                          aria-hidden="true"
+                        >
+                          {getCalendarInitials(calendar)}
+                        </span>
+                      )} */}
+                      <span className="flex-1 truncate text-sm text-gray-700 group-hover:text-gray-900 dark:text-gray-200 dark:group-hover:text-white">
+                        {/* {calendar.name || calendar.id} */}
+                        &nbsp;
                       </span>
-                    )} */}
-                    <span className="flex-1 truncate text-sm text-gray-700 group-hover:text-gray-900 dark:text-gray-200 dark:group-hover:text-white">
-                      {/* {calendar.name || calendar.id} */}
-                      &nbsp;
-                    </span>
-                  </label>
+                    </label>
+                  </div>
                 </li>
               );
             })}

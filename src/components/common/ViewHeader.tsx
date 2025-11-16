@@ -9,7 +9,7 @@ import {
 import ViewSwitcher from './ViewSwitcher';
 import { CalendarApp } from '@/types';
 
-export type ViewHeaderType = 'day' | 'week' | 'month';
+export type ViewHeaderType = 'day' | 'week' | 'month' | 'year';
 export type ViewSwitcherMode = 'buttons' | 'select';
 
 interface ViewHeaderProps {
@@ -32,6 +32,14 @@ interface ViewHeaderProps {
   showTodayBox?: boolean;
   /** ViewSwitcher mode (default: 'select') */
   switcherMode?: ViewSwitcherMode;
+  /** Sticky year for Year view (optional, only for Year view) */
+  stickyYear?: number | null;
+  /** Push-away offset for sticky year (in pixels) */
+  stickyYearOffset?: number;
+  /** Next year that's pushing the sticky year (optional, only for Year view) */
+  nextYear?: number | null;
+  /** Offset for the next year coming from below (in pixels) */
+  nextYearOffset?: number;
 }
 
 const ViewHeader: React.FC<ViewHeaderProps> = ({
@@ -45,6 +53,10 @@ const ViewHeader: React.FC<ViewHeaderProps> = ({
   customSubtitle,
   showTodayBox,
   switcherMode = 'buttons',
+  stickyYear,
+  stickyYearOffset = 0,
+  nextYear,
+  nextYearOffset = 0,
 }) => {
   // Determine whether to show TodayBox based on view type
   const shouldShowTodayBox =
@@ -67,6 +79,8 @@ const ViewHeader: React.FC<ViewHeaderProps> = ({
           month: 'long',
           year: 'numeric',
         });
+      case 'year':
+        return currentDate.getFullYear().toString();
       default:
         return '';
     }
@@ -127,11 +141,45 @@ const ViewHeader: React.FC<ViewHeaderProps> = ({
     );
   }
 
-  // Week/Month view layout
+  // Week/Month/Year view layout
   return (
     <div className={headerContainer} style={{ position: 'relative' }}>
       <div>
-        <h1 className={headerTitle}>{title}</h1>
+        {/* For Year view: show sticky year if available, otherwise show title */}
+        {viewType === 'year' && stickyYear ? (
+          <div style={{ position: 'relative', overflow: 'hidden' }}>
+            {/* Current sticky year - being pushed up */}
+            <h1
+              className={headerTitle}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                transform: `translateY(-${stickyYearOffset}px)`,
+                willChange: 'transform',
+              }}
+            >
+              {stickyYear}
+            </h1>
+            {/* Next year - coming from below */}
+            {nextYear && (
+              <h1
+                className={headerTitle}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  transform: `translateY(${nextYearOffset}px)`,
+                  willChange: 'transform',
+                }}
+              >
+                {nextYear}
+              </h1>
+            )}
+          </div>
+        ) : (
+          <h1 className={headerTitle}>{title}</h1>
+        )}
       </div>
 
       {/* buttons mode: center display */}

@@ -69,6 +69,8 @@ interface WeekComponentProps {
   onDetailPanelToggle?: (eventId: string | null) => void;
   customDetailPanelContent?: EventDetailContentRenderer;
   customEventDetailDialog?: EventDetailDialogRenderer;
+  onCalendarDrop?: (e: React.DragEvent, dropDate: Date, dropHour?: number, isAllDay?: boolean) => Event | null;
+  onCalendarDragOver?: (e: React.DragEvent) => void;
 }
 
 // Constants
@@ -297,6 +299,8 @@ const WeekComponent = React.memo<WeekComponentProps>(
     onDetailPanelToggle,
     customDetailPanelContent,
     customEventDetailDialog,
+    onCalendarDrop,
+    onCalendarDragOver,
   }) => {
     const [shouldShowMonthTitle, setShouldShowMonthTitle] = useState(false);
     const hideTitleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -494,6 +498,8 @@ const WeekComponent = React.memo<WeekComponentProps>(
           style={{ height: weekHeightPx }}
           data-date={createDateString(day.date)}
           onDoubleClick={e => onCreateStart(e, day.date)}
+          onDragOver={onCalendarDragOver}
+          onDrop={e => onCalendarDrop?.(e, day.date)}
         >
           {/* Date number area */}
           <div className="flex items-start justify-between p-2 pb-1 relative z-20">

@@ -22,6 +22,7 @@ import { defaultDragConfig } from '@/core/config';
 import ViewHeader, { ViewSwitcherMode } from '@/components/common/ViewHeader';
 import { analyzeMultiDayEventsForWeek, analyzeMultiDayRegularEvent } from '@/components/monthView/util';
 import { temporalToDate, dateToZonedDateTime } from '@/utils/temporal';
+import { useCalendarDrop } from '@/hooks/useCalendarDrop';
 import {
   calendarContainer,
   weekDayHeader,
@@ -79,6 +80,9 @@ const WeekView: React.FC<WeekViewProps> = ({
     null
   );
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [newlyCreatedEventId, setNewlyCreatedEventId] = useState<string | null>(
+    null
+  );
 
   // Get configuration constants
   const {
@@ -377,6 +381,14 @@ const WeekView: React.FC<WeekViewProps> = ({
     calculateDragLayout,
   });
 
+  // Use calendar drop functionality
+  const { handleDrop, handleDragOver } = useCalendarDrop({
+    app,
+    onEventCreated: (event: Event) => {
+      setNewlyCreatedEventId(event.id);
+    },
+  });
+
   const weekDays = useMemo(
     () => ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     []
@@ -459,14 +471,22 @@ const WeekView: React.FC<WeekViewProps> = ({
           className={allDayContent}
           style={{ minHeight: `${allDayAreaHeight}px` }}
         >
-          {weekDays.map((_, dayIndex) => (
-            <div
-              key={`allday-${dayIndex}`}
-              className={allDayCell}
-              style={{ minHeight: `${allDayAreaHeight}px` }}
-              onDoubleClick={e => handleCreateAllDayEvent?.(e, dayIndex)}
-            />
-          ))}
+          {weekDays.map((_, dayIndex) => {
+            const dropDate = new Date(currentWeekStart);
+            dropDate.setDate(currentWeekStart.getDate() + dayIndex);
+            return (
+              <div
+                key={`allday-${dayIndex}`}
+                className={allDayCell}
+                style={{ minHeight: `${allDayAreaHeight}px` }}
+                onDoubleClick={e => handleCreateAllDayEvent?.(e, dayIndex)}
+                onDragOver={handleDragOver}
+                onDrop={e => {
+                  handleDrop(e, dropDate, undefined, true);
+                }}
+              />
+            );
+          })}
 
           {/* Multi-day event overlay */}
           <div className="absolute inset-0 pointer-events-none">
@@ -492,6 +512,8 @@ const WeekView: React.FC<WeekViewProps> = ({
                 onResizeStart={handleResizeStart}
                 onEventUpdate={handleEventUpdate}
                 onEventDelete={handleEventDelete}
+                newlyCreatedEventId={newlyCreatedEventId}
+                onDetailPanelOpen={() => setNewlyCreatedEventId(null)}
                 selectedEventId={selectedEventId}
                 detailPanelEventId={detailPanelEventId}
                 onEventSelect={(eventId: string | null) =>
@@ -582,15 +604,23 @@ const WeekView: React.FC<WeekViewProps> = ({
           <div className="flex-grow relative">
             {timeSlots.map((slot, slotIndex) => (
               <div key={slotIndex} className={timeGridRow}>
-                {weekDays.map((_, dayIndex) => (
-                  <div
-                    key={`${slotIndex}-${dayIndex}`}
-                    className={timeGridCell}
-                    onDoubleClick={e => {
-                      handleCreateStart(e, dayIndex, slot.hour);
-                    }}
-                  />
-                ))}
+                {weekDays.map((_, dayIndex) => {
+                  const dropDate = new Date(currentWeekStart);
+                  dropDate.setDate(currentWeekStart.getDate() + dayIndex);
+                  return (
+                    <div
+                      key={`${slotIndex}-${dayIndex}`}
+                      className={timeGridCell}
+                      onDoubleClick={e => {
+                        handleCreateStart(e, dayIndex, slot.hour);
+                      }}
+                      onDragOver={handleDragOver}
+                      onDrop={e => {
+                        handleDrop(e, dropDate, slot.hour);
+                      }}
+                    />
+                  );
+                })}
               </div>
             ))}
 
@@ -672,6 +702,8 @@ const WeekView: React.FC<WeekViewProps> = ({
                         onResizeStart={handleResizeStart}
                         onEventUpdate={handleEventUpdate}
                         onEventDelete={handleEventDelete}
+                        newlyCreatedEventId={newlyCreatedEventId}
+                        onDetailPanelOpen={() => setNewlyCreatedEventId(null)}
                         selectedEventId={selectedEventId}
                         detailPanelEventId={detailPanelEventId}
                         onEventSelect={(eventId: string | null) =>
