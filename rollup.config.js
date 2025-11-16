@@ -65,7 +65,7 @@ export default {
       open: false,
       gzipSize: true,
       brotliSize: true,
-      template: 'treemap', // 使用树状图显示
+      template: 'treemap',
     }),
   ],
   external: ['react', 'react-dom', 'react/jsx-runtime', 'lucide-react'],

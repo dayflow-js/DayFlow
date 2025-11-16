@@ -66,7 +66,7 @@ export function LanguageSwitcher() {
 
     // Handle root path first
     if (path === '/') {
-      newPath = newLocale === 'zh' ? '/docs-zh' : newLocale === 'ja' ? '/docs-ja' : '/docs';
+      newPath = newLocale === 'zh' ? '/docs-zh/introduction' : newLocale === 'ja' ? '/docs-ja/introduction' : '/docs/introduction';
     } else {
       // Remove any existing locale prefix to get the base path
       let basePath = path;
