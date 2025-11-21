@@ -6,6 +6,8 @@ type BrandLogoProps = {
   showText?: boolean;
 };
 
+const basePath = process.env.BASE_PATH || '';
+
 export function BrandLogo({ className, showText = true }: BrandLogoProps) {
   return (
     <span
@@ -15,7 +17,7 @@ export function BrandLogo({ className, showText = true }: BrandLogoProps) {
       )}
     >
       <Image
-        src="/logo.png"
+        src={`${basePath}/logo.png`}
         alt="DayFlow logo"
         width={28}
         height={28}
